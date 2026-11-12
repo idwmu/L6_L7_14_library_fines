@@ -1,18 +1,37 @@
-def parse_member_id(member_id):
-    member_type, number = member_id.split('-')
+﻿def parse_member_id(member_id):
+    if not isinstance(member_id, str):
+        return None
+    parts = member_id.split("-")
+    if len(parts) != 2:
+        return None
+    member_type, number = parts
+    if not member_type or not number.strip().lstrip("+-").isdigit():
+        return None
     return member_type.upper(), int(number)
 
+
 def total_fine(days_csv):
-    days = [int(d) for d in days_csv.split(',')]
+    if not isinstance(days_csv, str):
+        return 0
     fine = 0
-    for d in days:
-        if d > 14:
-            fine += (d - 14) * 2
+    for d in days_csv.split(","):
+        d = d.strip()
+        if not d.lstrip("+-").isdigit():
+            continue
+        days = int(d)
+        if days > 14:
+            fine += (days - 14) * 2
     return fine
 
+
 def shelf_code(title):
+    if not isinstance(title, str):
+        return None
     words = title.split()
+    if len(words) < 2:
+        return None
     return (words[0][0] + words[1][0]).upper()
+
 
 def main():
     print("==== Running parse_member_id ====")
@@ -29,6 +48,7 @@ def main():
     user_input = input("Enter a book title with at least two words: ")
     result = shelf_code(user_input)
     print("Shelf Code:", result)
+
 
 if __name__ == "__main__":
     main()
